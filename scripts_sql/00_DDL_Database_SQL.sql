@@ -1,0 +1,22 @@
+CREATE TABLE customer_behavior (
+    customer_id               BIGINT PRIMARY KEY,
+    age                       BIGINT,
+    gender                    TEXT,
+    item_purchased            TEXT,
+    category                  TEXT,
+    purchase_amount_usd       BIGINT,
+    location                  TEXT,
+    size                      TEXT,
+    color                     TEXT,
+    season                    TEXT,
+    review_rating             DOUBLE PRECISION,
+    subscription_status       TEXT,
+    shipping_type             TEXT,
+    discount_applied          TEXT,
+    promo_code_used           TEXT,
+    previous_purchases        BIGINT,
+    payment_method            TEXT,
+    frequency_of_purchases    TEXT,
+    age_groups                TEXT,
+    purchase_frequency_days   BIGINT
+);
