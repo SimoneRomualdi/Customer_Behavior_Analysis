@@ -20,9 +20,6 @@ Questo progetto analizza il comportamento d'acquisto di un campione di clienti, 
 ---
 Dashboard
 
-<!-- Inserire qui lo screenshot della dashboard -->
-> ⚠️ *Screenshot della dashboard — da aggiungere*
-
 ![Dashboard](Screenshot_Dashboard.png)
 
 ## 🔄 Pipeline del Progetto
