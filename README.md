@@ -18,6 +18,12 @@ Questo progetto analizza il comportamento d'acquisto di un campione di clienti, 
 ```
 
 ---
+Dashboard
+
+<!-- Inserire qui lo screenshot della dashboard -->
+> ⚠️ *Screenshot della dashboard — da aggiungere*
+
+![Dashboard](Screenshot_Dashboard.png)
 
 ## 🔄 Pipeline del Progetto
 
@@ -51,13 +57,6 @@ Le query coprono diversi ambiti di analisi:
 | **Sconti** | Clienti con sconto che superano la spesa media |
 
 Tecniche SQL utilizzate: subquery, CTE (`WITH`), window functions (`ROW_NUMBER`, `SUM OVER`), `CASE WHEN`, `ROUND` con cast esplicito.
-
-### 4. Dashboard
-
-<!-- Inserire qui lo screenshot della dashboard -->
-> ⚠️ *Screenshot della dashboard — da aggiungere*
-
-![Dashboard](dashboard_screenshot.png)
 
 ---
 
