@@ -1,50 +1,51 @@
 # Customer Shopping Behavior — Analisi e Dashboard
 
-Un cliente di e-commerce lascia tracce in ogni acquisto: cosa compra, quanto spende, con che frequenza torna, se risponde agli sconti. Questo progetto trasforma 3.900 transazioni grezze in insight concreti sul comportamento d'acquisto, costruendo una pipeline completa da Python fino alla dashboard finale.
+## Executive Summary
+
+- **Business Problem**: Un e-commerce ha bisogno di capire quali segmenti di clientela generano più valore, se gli sconti attraggono clienti di qualità e quali prodotti performano meglio per categoria.
+- **Soluzione**: Pipeline end-to-end da Python (data cleaning) a PostgreSQL (analisi SQL) fino a Power BI (dashboard interattiva) su 3.900 transazioni reali.
+- **Risultati**: Identificata una quota significativa di clienti scontati che supera comunque la spesa media globale; segmentazione clienti per storico acquisti; top 3 prodotti per categoria con ranking automatico.
+- **Prossimi Passi**: Aggiungere cohort analysis per misurare retention nel tempo; arricchire il dataset con dati di ritorno prodotto per analisi di soddisfazione più completa.
 
 ---
 
-## Il Problema
+## Business Problem
 
-Il dataset originale era utilizzabile, ma non analizzabile: nomi di colonne non uniformi, valori mancanti nelle recensioni, frequenze d'acquisto espresse come testo, e una colonna duplicata che avrebbe inquinato qualsiasi analisi sugli sconti. Prima di rispondere a qualsiasi domanda di business, i dati andavano preparati.
-
----
-
-## La Pipeline
-
-### Fase 1 — Pulizia e Preparazione (Python / Pandas)
-
-Il notebook trasforma il CSV grezzo in un dataset pronto per l'analisi:
-
-**Missing values** → I 37 valori mancanti in `Review Rating` vengono imputati con la mediana calcolata per categoria merceologica, non con una mediana globale. La scelta è intenzionale: un prodotto di abbigliamento e uno di elettronica hanno distribuzioni di voti diverse.
-
-**Feature Engineering** → Due nuove colonne create da dati esistenti:
-- `age_groups`: i clienti vengono segmentati in 4 fasce d'età tramite quantili (Giovane Adulto, Adulto, Mezza Età, Senior) — confini definiti dai dati, non arbitrari
-- `purchase_frequency_days`: la frequenza testuale ("Weekly", "Fortnightly"...) viene convertita in giorni numerici per renderla confrontabile
-
-**Rilevamento duplicati concettuali** → `promo_code_used` e `discount_applied` risultano identiche al 100% su tutti i 3.900 record. La colonna ridondante viene rimossa prima del caricamento su database.
-
-### Fase 2 — Analisi (SQL / PostgreSQL)
-
-Con il dataset pulito caricato su PostgreSQL, le query rispondono a domande business specifiche:
-
-| Domanda | Tecnica |
-|---|---|
-| Quali prodotti hanno le recensioni migliori per categoria? | `ROW_NUMBER() OVER(PARTITION BY category)` |
-| I clienti scontati spendono comunque sopra la media? | Subquery con soglia dinamica |
-| Gli abbonati generano più revenue? | Aggregazione con confronto diretto |
-| Come si distribuisce il profitto per fascia d'età? | `SUM() OVER()` per contributo percentuale |
-| Quali prodotti ricevono più sconti? | `CASE WHEN` con percentuale calcolata |
-
-### Fase 3 — Dashboard (Power BI)
-
-I risultati dell'analisi SQL confluiscono in una dashboard interattiva che visualizza i segmenti chiave, le performance per categoria e i pattern di acquisto.
+Un cliente di e-commerce lascia tracce in ogni acquisto: cosa compra, quanto spende, con che frequenza torna, se risponde agli sconti. Il dataset grezzo però non era analizzabile direttamente: colonne non uniformi, valori mancanti nelle recensioni, frequenze d'acquisto espresse come testo, e una colonna duplicata che avrebbe inquinato qualsiasi analisi sugli sconti.
 
 ---
 
-## Insight Principale
+## Metodologia
 
-I clienti che ricevono uno sconto non necessariamente spendono meno: una quota significativa di clienti scontati supera comunque la spesa media globale. Questo suggerisce che gli sconti attraggono clienti con propensione alla spesa alta, non solo cacciatori di offerte.
+1. **Data Cleaning (Python / Pandas)** → Normalizzazione nomi colonne, imputazione missing values con mediana per categoria, rimozione colonna ridondante, feature engineering.
+2. **Feature Engineering** → Creazione di `age_groups` (segmentazione età tramite quantili) e `purchase_frequency_days` (conversione frequenza testuale in giorni numerici).
+3. **Database Setup (SQL)** → Caricamento del dataset pulito su PostgreSQL con schema DDL dedicato.
+4. **Analisi SQL** → Query su segmentazione clienti, ranking prodotti, analisi revenue per fascia demografica e impatto degli sconti.
+5. **Dashboard (Power BI)** → Visualizzazione KPI principali con filtri interattivi per categoria, genere e stato abbonamento.
+
+---
+
+## Competenze
+
+- **Python**: Pandas, Jupyter Notebook, `pd.qcut()`, `groupby().transform()`, `map()`
+- **SQL**: CTE, Window Functions (`ROW_NUMBER OVER PARTITION BY`, `SUM OVER`), Subquery, `CASE WHEN`, `ROUND` con cast esplicito
+- **Power BI**: Dashboard interattiva, filtri dinamici, KPI cards
+
+---
+
+## Risultati & Raccomandazioni
+
+- **Sconti e spesa**: I clienti scontati non spendono necessariamente meno — una quota rilevante supera la spesa media globale. Gli sconti sembrano attrarre clienti con alta propensione alla spesa, non solo cacciatori di offerte. **Raccomandazione**: mantenere la strategia di sconto ma monitorare il margine per segmento, non solo il volume.
+- **Segmentazione clienti**: La maggior parte dei clienti rientra nella categoria "Fedele" (più di 10 acquisti precedenti). **Raccomandazione**: investire in programmi di loyalty per questo segmento che genera la quota maggiore di revenue.
+- **Missing values**: I 37 valori mancanti in `Review Rating` sono stati imputati con la mediana per categoria merceologica — scelta più accurata rispetto a una mediana globale perché rispetta le distribuzioni di voto diverse tra categorie.
+
+---
+
+## Prossimi Passi
+
+1. Aggiungere cohort analysis per misurare la retention mensile dei clienti nel tempo.
+2. Integrare dati di ritorno prodotto per correlare recensioni basse con comportamenti di reso.
+3. Costruire un modello di segmentazione RFM completo (Recency, Frequency, Monetary) per affinare il targeting.
 
 ---
 
@@ -65,10 +66,4 @@ I clienti che ricevono uno sconto non necessariamente spendono meno: una quota s
 └── README.md
 ```
 
----
-
-## Stack Tecnologico
-
-- **Python** — Pandas, Jupyter Notebook
-- **SQL** — PostgreSQL (CTE, Window Functions, Subquery)
-- **Power BI** — Dashboard finale
+**Stack**: Python · PostgreSQL · SQL · Power BI
